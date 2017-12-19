@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bangumi 好友统计
 // @namespace    https://bgm.tv/user/liaune
-// @version      0.2.0
+// @version      0.2.1
 // @description  显示好友的最近一条Timeline时间，显示总好友数、活跃好友数，3天内有更新Timeline的：Active，100天内有更新Timeline的：Alive，100天以上没更新Timeline的：M.I.T(Missing In Time)；显示好友的注册时间，08-10：Senior，11-13：Junior，14-16：Sophomore，17-：Freshman；显示好友与自己的共同爱好数量和同步率，根据一定的公式计算出高同步率的好友。
 // @author       Liaune
 // @include     /^https?://(bgm\.tv|chii\.in|bangumi\.tv)\/user\/.*\/(friends|rev_friends)
@@ -62,6 +62,27 @@ color:blue;
     showBtn2.href='javascript:;';
     showBtn2.textContent = '与我的同步率';
     document.querySelector('#friend_flag').append(showBtn2);
+    //按日期排序
+    var showBtn3 = document.createElement('a');
+    showBtn3.addEventListener('click', mySort);
+    showBtn3.className = 'chiiBtn';
+    showBtn3.href='javascript:;';
+    showBtn3.textContent = '排序';
+
+    function mySort() {
+        $.getScript('https://cdn.rawgit.com/wanasit/chrono/385efd68/chrono.min.js', () => {
+            var container = document.querySelector('ul#memberUserList');
+            if (container) container.style.cssText = 'display: flex; flex-flow: row wrap;';
+
+            function myParseDate (dateString) {
+                return chrono.parseDate(dateString.replace('  ', ' ').replace('h ', 'hour ').replace('d ', 'day ').replace('m ', 'min ').replace('s ', 'sec'));
+            }
+            [].slice.call(document.querySelectorAll('li.user span.rank:last-child small'), 0)
+                .map(x => [x.textContent, x])
+                .sort((x,y) => myParseDate(x[0]) - myParseDate(y[0]))
+                .forEach((x,n) => x[1].parentNode.parentNode.parentNode.style.order = n);
+        });
+    }
 
     function showsignup(){
         itemsList.forEach( (elem, index) => {
@@ -92,10 +113,14 @@ color:blue;
                     else {signuptime.classList.add('freshman');freshman+=1;}
                 }
                 signuptime.innerHTML = `<p></p><small>${signtime}</small>`;
-                document.querySelector('#friend_flag').innerHTML =itemsList.length+"个好友&nbsp;&nbsp;&nbsp;"+"&nbsp;Senior:"+senior+"&nbsp;Junior:"+junior+"&nbsp;Sophomore:"+sophomore+"&nbsp;Freshman:"+freshman;
+                document.querySelector('#friend_flag').innerHTML =itemsList.length+"个好友&nbsp;&nbsp;&nbsp;"+"&nbsp;Senior:"+senior+"&nbsp;Junior:"+junior+"&nbsp;Sophomore:"+sophomore+"&nbsp;Freshman:"+freshman+"&nbsp;";
+                if((senior+junior+sophomore+freshman)==itemsList.length){
+                    document.querySelector('#friend_flag').append(showBtn3);}
                 document.querySelectorAll('#memberUserList  li.user div.userContainer')[index].append(signuptime);
             });
+
         });
+
     }
 
     function ShowTime(){
@@ -130,8 +155,10 @@ color:blue;
                     dead_friends+=1;
                 }
                 activtime.innerHTML = `<p></p><small>${lasttime}</small>`;
-                document.querySelector('#friend_flag').innerHTML =itemsList.length+"个好友&nbsp;&nbsp;&nbsp;"+"&nbsp;Active:"+active_friends+"&nbsp;Alive:"+alive_friends+"&nbsp;M.I.T:"+dead_friends;
+                document.querySelector('#friend_flag').innerHTML =itemsList.length+"个好友&nbsp;&nbsp;&nbsp;"+"&nbsp;Active:"+active_friends+"&nbsp;Alive:"+alive_friends+"&nbsp;M.I.T:"+dead_friends+"&nbsp;";
                 document.querySelectorAll('#memberUserList  li.user div.userContainer')[index].append(activtime);
+                if((dead_friends+alive_friends+active_friends)==itemsList.length){
+                    document.querySelector('#friend_flag').append(showBtn3);}
             });
         });
     }
