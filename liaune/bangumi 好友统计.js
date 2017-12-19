@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bangumi 好友统计
 // @namespace    https://bgm.tv/user/liaune
-// @version      0.2.1
+// @version      0.2.3
 // @description  显示好友的最近一条Timeline时间，显示总好友数、活跃好友数，3天内有更新Timeline的：Active，100天内有更新Timeline的：Alive，100天以上没更新Timeline的：M.I.T(Missing In Time)；显示好友的注册时间，08-10：Senior，11-13：Junior，14-16：Sophomore，17-：Freshman；显示好友与自己的共同爱好数量和同步率，根据一定的公式计算出高同步率的好友。
 // @author       Liaune
 // @include     /^https?://(bgm\.tv|chii\.in|bangumi\.tv)\/user\/.*\/(friends|rev_friends)
@@ -85,6 +85,7 @@ color:blue;
     }
 
     function showsignup(){
+        showBtn1.style.display="none";
         itemsList.forEach( (elem, index) => {
             /*let href = elem.querySelector('img.avatar').src;
             let ID = href.match(/\/(\d{1,6}).jpg/)? parseInt(href.match(/\/(\d{1,6}).jpg/)[1]):'NULL';
@@ -113,10 +114,10 @@ color:blue;
                     else {signuptime.classList.add('freshman');freshman+=1;}
                 }
                 signuptime.innerHTML = `<p></p><small>${signtime}</small>`;
-                document.querySelector('#friend_flag').innerHTML =itemsList.length+"个好友&nbsp;&nbsp;&nbsp;"+"&nbsp;Senior:"+senior+"&nbsp;Junior:"+junior+"&nbsp;Sophomore:"+sophomore+"&nbsp;Freshman:"+freshman+"&nbsp;";
+                document.querySelector('#friend_flag').childNodes[0].nodeValue =itemsList.length+"个好友   "+" Senior:"+senior+" Junior:"+junior+" Sophomore:"+sophomore+" Freshman:"+freshman+" ";
+                document.querySelectorAll('#memberUserList  li.user div.userContainer')[index].append(signuptime);
                 if((senior+junior+sophomore+freshman)==itemsList.length){
                     document.querySelector('#friend_flag').append(showBtn3);}
-                document.querySelectorAll('#memberUserList  li.user div.userContainer')[index].append(signuptime);
             });
 
         });
@@ -124,6 +125,7 @@ color:blue;
     }
 
     function ShowTime(){
+        showBtn.style.display="none";
         itemsList.forEach( (elem, index) => {
             let href = elem.querySelector('a.avatar').href;
             fetch(href,{credentials: "include"})
@@ -155,7 +157,7 @@ color:blue;
                     dead_friends+=1;
                 }
                 activtime.innerHTML = `<p></p><small>${lasttime}</small>`;
-                document.querySelector('#friend_flag').innerHTML =itemsList.length+"个好友&nbsp;&nbsp;&nbsp;"+"&nbsp;Active:"+active_friends+"&nbsp;Alive:"+alive_friends+"&nbsp;M.I.T:"+dead_friends+"&nbsp;";
+                document.querySelector('#friend_flag').childNodes[0].nodeValue =itemsList.length+"个好友   "+" Active:"+active_friends+" Alive:"+alive_friends+" M.I.T:"+dead_friends+" ";
                 document.querySelectorAll('#memberUserList  li.user div.userContainer')[index].append(activtime);
                 if((dead_friends+alive_friends+active_friends)==itemsList.length){
                     document.querySelector('#friend_flag').append(showBtn3);}
@@ -164,6 +166,8 @@ color:blue;
     }
 
     function showSimilar(){
+        showBtn2.style.display="none";
+        showBtn3.style.display="none";
         itemsList.forEach( (elem, index) => {
             let href = elem.querySelector('a.avatar').href;
             fetch(href,{credentials: "include"})
@@ -185,9 +189,9 @@ color:blue;
                     show_similar.style.fontWeight='bold';
                     similar_friends+=1;
                 }
-                let show_similarity = ''+Similarity+'&nbsp;/&nbsp;'+Similarity_percent+'%';
+                let show_similarity = ''+Similarity+' / '+Similarity_percent+'%';
                 show_similar.innerHTML = `<p></p><small></small>${show_similarity}`;
-                document.querySelector('#friend_flag').innerHTML =itemsList.length+"个好友&nbsp;&nbsp;&nbsp;"+"&nbsp;和我同步率高的好友:"+similar_friends;
+                document.querySelector('#friend_flag').childNodes[0].nodeValue =itemsList.length+"个好友   "+" 和我同步率高的好友:"+similar_friends;
                 document.querySelectorAll('#memberUserList  li.user div.userContainer')[index].append(show_similar);
             });
         });
