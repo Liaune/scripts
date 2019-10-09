@@ -9,8 +9,5 @@
 // ==/UserScript==
 
 (function() {
-    var script = document.createElement('script');
-	script.setAttribute('type','text/javascript');
-	script.setAttribute('src','https://imgchr.com/sdk/pup.js');
-	document.getElementsByTagName('head')[0].appendChild(script);
+	$('body').append(`<script async id="chevereto-pup-src" src="https://imgchr.com/sdk/pup.js" data-url="https://imgchr.com/upload" data-auto-insert="bbcode-embed-medium"></script>`);
 })();
