@@ -4,7 +4,7 @@
 // @version      0.2
 // @description  imgchr.com图片上传插件
 // @author       liaune
-// @include      /^https?://(bgm\.tv|bangumi\.tv|chii\.in)/(blog|ep|rakuen\/topic|group\/topic|subject).*
+// @include      /^https?://(bgm\.tv|bangumi\.tv|chii\.in)/(blog|ep|rakuen\/topic|group|subject).*
 // @grant        none
 // ==/UserScript==
 
