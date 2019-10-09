@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         upload_imgchr
+// @name         bangumi_upload_imgchr
 // @namespace    https://github.com/Liaune/scripts/tree/master/liaune
-// @version      0.1
+// @version      0.2
 // @description  imgchr.com图片上传插件
 // @author       liaune
-// @include      *.*
+// @include      /^https?://(bgm\.tv|bangumi\.tv|chii\.in)/(blog|ep|rakuen\/topic|group\/topic|subject).*
 // @grant        none
 // ==/UserScript==
 
